@@ -81,7 +81,8 @@ def main():
     # Feature Importance
     st.subheader("🔍 Feature Importance")
     feature_importance = pd.DataFrame({"Feature": df.columns[:-1], "Importance": model.feature_importances_})
-    fig = px.bar(feature_importance.sort_values(by="Importance", ascending=False),
+    selected_features_df = feature_importance[feature_importance['Importance'] >= 0.005]
+    fig = px.bar(selected_features_df.sort_values(by="Importance", ascending=True),
                  x="Importance", y="Feature", orientation='h', title="Feature Importance", color="Importance")
     st.plotly_chart(fig)
 
