@@ -28,7 +28,7 @@ def train_model(df):
     X_test = scaler.transform(X_test)
     model = RandomForestClassifier(random_state=42)
     model.fit(X_train, y_train)
-    return model, X_test, y_test, scaler
+    return model, X_train, X_test, y_train, y_test, scaler
 
 # Streamlit App
 def main():
@@ -37,8 +37,15 @@ def main():
     # Sidebar
     st.sidebar.header("User Input Parameters")
     df = load_data()
-    model, X_test, y_test, scaler = train_model(df)
+    model, X_train, X_test, y_train, y_test, scaler = train_model(df)
 
+    # Display dataset information
+    st.subheader("📊 Dataset Information")
+    st.write(f"**Number of Columns:** {df.shape[1]}")
+    st.write(f"**Number of Rows:** {df.shape[0]}")
+    st.write(f"**Training Samples:** {X_train.shape[0]}")
+    st.write(f"**Testing Samples:** {X_test.shape[0]}")
+    
     # User input form for process parameters
     with st.sidebar.expander("🔧 Enter Process Parameters"):
         input_data = {feature: st.number_input(f"{feature}", value=df[feature].mean()) for feature in df.columns[:-1]}
@@ -55,7 +62,7 @@ def main():
         st.sidebar.success(f"Predicted Quality Class: **{prediction[0]}** 🎯")
 
     # Dashboard Layout
-    st.title("📊 Product Quality Prediction Dashboard")
+    st.title("📊 Product Quality Prediction Dashboard - Random Forest Model")
     st.markdown("Analyze and predict product quality using Machine Learning.")
 
     # Model Performance Section
